@@ -1,0 +1,68 @@
+server:
+  port: 9409
+  servlet:
+    context-path: /file
+
+spring:
+  application:
+    name: meiracle-file
+  # ===== 数据源（占位，业务当前以存储抽象为主；如需落库元数据可启用，切勿硬编码真实密码） =====
+  datasource:
+    dynamic:
+      primary: master
+      strict: false
+      datasource:
+        master:
+          url: jdbc:mysql://${DB_HOST:127.0.0.1}:3306/meiracle_file?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+          username: ${DB_USER:meiracle}
+          password: ${DB_PASSWORD:CHANGE_ME_db_pwd}
+          driver-class-name: com.mysql.cj.jdbc.Driver
+  # ===== Redis（Redisson，读取 spring.data.redis.*） =====
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:CHANGE_ME_redis_pwd}
+      database: 0
+      timeout: 3000ms
+
+# ===== MyBatis-Plus（如需文件元数据落库时启用） =====
+mybatis-plus:
+  mapperPackage: cn.meiracle.file.dao.mapper
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  typeAliasesPackage: cn.meiracle.file.domain
+  sql-log:
+    enabled: false
+
+# ===== Nacos（注册/配置中心，占位账号，生产请替换） =====
+nacos:
+  addr: ${NACOS_ADDR:127.0.0.1:8848}
+  username: ${NACOS_USERNAME:nacos}
+  password: ${NACOS_PASSWORD:CHANGE_ME_nacos_pwd}
+
+# ===== Dubbo =====
+dubbo:
+  application:
+    name: meiracle-file
+  protocol:
+    name: dubbo
+    port: 20882
+  registry:
+    address: nacos://${NACOS_ADDR:127.0.0.1:8848}
+  scan:
+    base-packages: cn.meiracle.file.provider.remote
+  consumer:
+    check: false
+
+# ===== 文件存储配置 =====
+meiracle:
+  file:
+    storage:
+      # local（当前默认、可运行）/ minio（占位，尚未实现）
+      type: ${FILE_STORAGE_TYPE:local}
+      # 本地存储根目录
+      dir: ${FILE_STORAGE_DIR:./file-storage}
+
+logging:
+  level:
+    cn.meiracle: info
