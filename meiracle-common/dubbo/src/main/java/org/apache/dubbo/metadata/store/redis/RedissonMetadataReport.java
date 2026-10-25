@@ -64,7 +64,7 @@ public class RedissonMetadataReport extends AbstractMetadataReport {
         super(url);
         this.root = url.getGroup(DEFAULT_ROOT);
         this.ttlMs = url.getParameter(CYCLE_REPORT_KEY, DEFAULT_METADATA_REPORT_CYCLE_REPORT)
-            ? ONE_DAY_IN_MILLISECONDS * 2L
+            ? 86400000L * 2L
             : 0L;
     }
 
@@ -281,7 +281,7 @@ public class RedissonMetadataReport extends AbstractMetadataReport {
             Long result = getRedisson().getScript(StringCodec.INSTANCE).eval(
                 RScript.Mode.READ_WRITE,
                 CAS_LUA,
-                RScript.ReturnType.LONG,
+                RScript.ReturnType.INTEGER,
                 Collections.singletonList(key),
                 field, newValue, ticket == null ? "" : ticket
             );

@@ -2,7 +2,6 @@ package cn.meiracle.core.utils;
 
 import cn.hutool.extra.spring.SpringUtil;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.boot.thread.Threading;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -66,7 +65,12 @@ public final class SpringUtils extends SpringUtil {
      * @return true 启用 false 未启用
      */
     public static boolean isVirtual() {
-        return Threading.VIRTUAL.isActive(getBean(Environment.class));
+        try {
+            return Boolean.TRUE.equals(getBean(Environment.class)
+                .getProperty("spring.threads.virtual.enabled", Boolean.class, false));
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

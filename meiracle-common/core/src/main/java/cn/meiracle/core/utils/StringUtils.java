@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Validator;
 import cn.hutool.core.util.StrUtil;
-import org.apache.commons.lang3.Strings;
 import org.springframework.util.AntPathMatcher;
 
 import java.nio.charset.Charset;
@@ -337,7 +336,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     public static boolean startWithAnyIgnoreCase(CharSequence str, CharSequence... prefixs) {
         // 判断是否是以指定字符串开头
         for (CharSequence prefix : prefixs) {
-            if (Strings.CI.startsWith(str, prefix)) {
+            if (startsWithIgnoreCase(str, prefix)) {
                 return true;
             }
         }
@@ -394,7 +393,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 是否相等
      */
     public static boolean equals(final CharSequence cs1, final CharSequence cs2) {
-        return Strings.CS.equals(cs1, cs2);
+        return equals(cs1, cs2);
     }
 
     /**
@@ -405,7 +404,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 是否在列表中
      */
     public static boolean equalsAny(final CharSequence string, final CharSequence... searchStrings) {
-        return Strings.CS.equalsAny(string, searchStrings);
+        return equalsAny(string, searchStrings);
     }
 
     /**
@@ -416,7 +415,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 是否在列表中
      */
     public static boolean equalsAnyIgnoreCase(final CharSequence string, final CharSequence... searchStrings) {
-        return Strings.CI.equalsAny(string, searchStrings);
+        return equalsAnyIgnoreCase(string, searchStrings);
     }
 
     /**
@@ -427,7 +426,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 是否相等
      */
     public static boolean equalsIgnoreCase(final CharSequence cs1, final CharSequence cs2) {
-        return Strings.CI.equals(cs1, cs2);
+        return equalsIgnoreCase(cs1, cs2);
     }
 
     /**
@@ -438,7 +437,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 如果seq中包含searchSeq，则返回true；否则返回false
      */
     public static boolean contains(final CharSequence seq, final CharSequence searchSeq) {
-        return Strings.CS.contains(seq, searchSeq);
+        return contains(seq, searchSeq);
     }
 
     /**
@@ -449,7 +448,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 如果包含则返回 true，否则返回 false
      */
     public static boolean containsIgnoreCase(final CharSequence seq, final CharSequence searchSeq) {
-        return Strings.CI.contains(seq, searchSeq);
+        return containsIgnoreCase(seq, searchSeq);
     }
 
     /**
@@ -460,7 +459,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 如果以指定前缀开头则返回 true，否则返回 false
      */
     public static boolean startsWith(final CharSequence str, final CharSequence prefix) {
-        return Strings.CS.startsWith(str, prefix);
+        return startsWith(str, prefix);
     }
 
     /**
@@ -471,7 +470,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 如果以指定前缀开头则返回 true，否则返回 false
      */
     public static boolean startsWithIgnoreCase(final CharSequence str, final CharSequence prefix) {
-        return Strings.CI.startsWith(str, prefix);
+        return startsWithIgnoreCase(str, prefix);
     }
 
     /**
@@ -482,7 +481,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 如果以指定后缀结尾则返回 true，否则返回 false
      */
     public static boolean endsWithIgnoreCase(final CharSequence str, final CharSequence suffix) {
-        return Strings.CI.endsWith(str, suffix);
+        return endsWithIgnoreCase(str, suffix);
     }
 
     /**
@@ -507,7 +506,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 处理后的字符串
      */
     public static String remove(final String str, final String remove) {
-        return Strings.CS.remove(str, remove);
+        return remove(str, remove);
     }
 
     /**
@@ -548,28 +547,28 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 如果包含任意一个字符序列返回 true，否则返回 false
      */
     public static boolean containsAny(final CharSequence cs, final CharSequence... searchCharSequences) {
-        return Strings.CS.containsAny(cs, searchCharSequences);
+        return containsAny(cs, searchCharSequences);
     }
 
     /**
      * 将一个字符串替换为较大字符串内的另一个字符串，一次
      */
     public static String replaceOnce(final String text, final String searchString, final String replacement) {
-        return Strings.CS.replaceOnce(text, searchString, replacement);
+        return replaceOnce(text, searchString, replacement);
     }
 
     /**
      * 测试 CharSequence 是否以所提供的任何后缀结尾。
      */
     public static boolean endsWithAny(final CharSequence sequence, final CharSequence... searchStrings) {
-        return Strings.CS.endsWithAny(sequence, searchStrings);
+        return endsWithAny(sequence, searchStrings);
     }
 
     /**
      * 测试 CharSequence 是否以指定的后缀结尾。
      */
     public static boolean endsWith(final CharSequence str, final CharSequence suffix) {
-        return Strings.CS.endsWith(str, suffix);
+        return endsWith(str, suffix);
     }
 
 }

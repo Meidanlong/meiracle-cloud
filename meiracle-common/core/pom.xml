@@ -51,7 +51,7 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.yulichang</groupId>
+            <groupId>io.github.linpeilie</groupId>
             <artifactId>mapstruct-plus-spring-boot-starter</artifactId>
             <version>${mapstruct-plus.version}</version>
         </dependency>
@@ -73,6 +73,21 @@
   <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-databind</artifactId>
+  </dependency>
+  <dependency>
+    <groupId>tools.jackson.core</groupId>
+    <artifactId>jackson-core</artifactId>
+    <version>${jackson3.version}</version>
+  </dependency>
+  <dependency>
+    <groupId>tools.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId>
+    <version>${jackson3.version}</version>
+  </dependency>
+  <dependency>
+    <groupId>org.jspecify</groupId>
+    <artifactId>jspecify</artifactId>
+    <version>1.0.0</version>
   </dependency>
 </dependencies>
 </project>

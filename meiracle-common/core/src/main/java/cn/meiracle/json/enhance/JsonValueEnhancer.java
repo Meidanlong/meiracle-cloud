@@ -87,20 +87,16 @@ public class JsonValueEnhancer {
     }
 
     private void collectValue(Object value, JsonEnhancementContext context, IdentityHashMap<Object, Boolean> visited) {
-        switch (value) {
-            case null -> {
-                return;
-            }
-            case Map<?, ?> map -> {
-                map.values().forEach(child -> collectValue(child, context, visited));
-                return;
-            }
-            case Iterable<?> iterable -> {
-                iterable.forEach(child -> collectValue(child, context, visited));
-                return;
-            }
-            default -> {
-            }
+        if (value == null) {
+            return;
+        }
+        if (value instanceof Map<?, ?> map) {
+            map.values().forEach(child -> collectValue(child, context, visited));
+            return;
+        }
+        if (value instanceof Iterable<?> iterable) {
+            iterable.forEach(child -> collectValue(child, context, visited));
+            return;
         }
         if (value.getClass().isArray()) {
             int length = Array.getLength(value);
@@ -134,21 +130,17 @@ public class JsonValueEnhancer {
     }
 
     private JsonNode renderValue(Object value, JsonEnhancementContext context, IdentityHashMap<Object, Boolean> visited) {
-        switch (value) {
-            case null -> {
-                return jsonMapper.nullNode();
-            }
-            case JsonNode jsonNode -> {
-                return jsonNode;
-            }
-            case Map<?, ?> map -> {
-                return renderMap(map, context, visited);
-            }
-            case Iterable<?> iterable -> {
-                return renderIterable(iterable, context, visited);
-            }
-            default -> {
-            }
+        if (value == null) {
+            return jsonMapper.nullNode();
+        }
+        if (value instanceof JsonNode jsonNode) {
+            return jsonNode;
+        }
+        if (value instanceof Map<?, ?> map) {
+            return renderMap(map, context, visited);
+        }
+        if (value instanceof Iterable<?> iterable) {
+            return renderIterable(iterable, context, visited);
         }
         if (value.getClass().isArray()) {
             return renderArray(value, context, visited);

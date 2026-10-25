@@ -5,8 +5,8 @@ import cn.meiracle.json.handler.BigNumberSerializer;
 import cn.meiracle.json.handler.CustomDateDeserializer;
 import cn.meiracle.json.handler.CustomLocalDateTimeDeserializer;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
-import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import tools.jackson.databind.ext.javatime.ser.LocalDateTimeSerializer;
 import tools.jackson.databind.module.SimpleModule;
@@ -44,9 +44,9 @@ public class JacksonConfig {
     }
 
     @Bean
-    public JsonMapperBuilderCustomizer jsonInitCustomizer() {
+    public Jackson2ObjectMapperBuilderCustomizer jsonInitCustomizer() {
         return builder -> {
-            builder.defaultTimeZone(TimeZone.getDefault());
+            builder.timeZone(TimeZone.getDefault());
             log.info("初始化 jackson 配置");
         };
     }

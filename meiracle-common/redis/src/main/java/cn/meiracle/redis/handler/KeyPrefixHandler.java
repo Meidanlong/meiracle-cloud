@@ -1,7 +1,7 @@
 package cn.meiracle.redis.handler;
 
 import cn.meiracle.core.utils.StringUtils;
-import org.redisson.config.NameMapper;
+import org.redisson.api.NameMapper;
 
 /**
  * redis缓存key前缀处理
