@@ -51,8 +51,8 @@ controller        # 出入参、鉴权转发（REST 端点）
         └─ service (+ impl)   # 领域服务（单实体逻辑，继承 ServiceImpl）
              └─ dao / mapper   # 数据访问（BaseMapperPlus<T, V>）
 domain            # 实体（继承 BaseEntity，含审计字段）
-export            # 跨模块契约：api(接口) + model(DTO)，供 provider/consumer 共享
-provider/remote   # 远程能力暴露（@DubboService 实现 export.api）
+export            # 跨模块契约：service/(RPC 接口) + domain/(契约类型 model/request/response/enums)，供 provider/consumer 共享
+provider/remote   # 远程能力暴露（@DubboService 实现 export.service 中的接口）
 task              # 定时任务（@Scheduled）
 common/constants  # 常量
 client            # 出站 HTTP 调用（demo -> monitor 变动上报）
@@ -72,7 +72,7 @@ client            # 出站 HTTP 调用（demo -> monitor 变动上报）
 2. **改包名**：全局把 `cn.meiracle.demo` → `cn.meiracle.<业务>`；把 `application.yml` 的 `spring.application.name` 改为 `meiracle-<业务>`。
 3. **改端口与上下文**：`server.port` / `server.servlet.context-path`（如 `9202` / `/order`）；Dubbo 协议端口避免冲突（如 `20882`）。
 4. **写实体与链路**：以 `DemoThing` 为模板，新建 `YourEntity`（`domain`）→ `XxxMapper`（`dao/mapper`，继承 `BaseMapperPlus`）→ `XxxService/Impl`（`service`）→ `XxxBiz`（`biz`，编排 + 事务）→ `XxxController`（`controller`）。
-5. **暴露远程能力**：若需被其他服务调用，在 `export/api` 定义接口、`provider/remote` 用 `@DubboService` 实现；消费方通过 `export` 依赖 + `@DubboReference` 引入。
+5. **暴露远程能力**：若需被其他服务调用，在 `export/service` 定义 RPC 接口、`export/domain` 放置契约类型（model/request/response/enums）、`provider/remote` 用 `@DubboService` 实现；消费方通过 `export` 依赖 + `@DubboReference` 引入。
 6. **依赖 common**：在 `pom.xml` 引入所需能力模块（core 必选，按需要 redis/mysql/dubbo/nacos）。
 7. **建表**：在 `meiracle-deploy/init/init.sql` 追加本业务的建表语句（参考 `demo_thing`）。
 

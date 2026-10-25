@@ -1,7 +1,7 @@
 package cn.meiracle.monitor.controller;
 
 import cn.meiracle.monitor.biz.ChangeRecordBiz;
-import cn.meiracle.monitor.export.model.ChangeRecordDTO;
+import cn.meiracle.monitor.export.domain.model.ChangeRecordDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

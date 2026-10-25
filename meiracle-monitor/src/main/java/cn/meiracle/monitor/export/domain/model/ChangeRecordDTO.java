@@ -1,4 +1,4 @@
-package cn.meiracle.monitor.export.model;
+package cn.meiracle.monitor.export.domain.model;
 
 import lombok.Data;
 

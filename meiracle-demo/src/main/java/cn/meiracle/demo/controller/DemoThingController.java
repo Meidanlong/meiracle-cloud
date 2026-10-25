@@ -1,7 +1,7 @@
 package cn.meiracle.demo.controller;
 
 import cn.meiracle.demo.biz.DemoThingBiz;
-import cn.meiracle.demo.export.model.DemoThingDTO;
+import cn.meiracle.demo.export.domain.model.DemoThingDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

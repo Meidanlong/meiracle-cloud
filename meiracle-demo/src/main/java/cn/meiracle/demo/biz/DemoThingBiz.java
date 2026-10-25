@@ -2,7 +2,7 @@ package cn.meiracle.demo.biz;
 
 import cn.meiracle.demo.client.MonitorClient;
 import cn.meiracle.demo.domain.DemoThing;
-import cn.meiracle.demo.export.model.DemoThingDTO;
+import cn.meiracle.demo.export.domain.model.DemoThingDTO;
 import cn.meiracle.demo.service.DemoThingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

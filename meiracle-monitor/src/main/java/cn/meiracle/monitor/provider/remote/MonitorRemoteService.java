@@ -1,19 +1,19 @@
 package cn.meiracle.monitor.provider.remote;
 
 import cn.meiracle.monitor.biz.ChangeRecordBiz;
-import cn.meiracle.monitor.export.api.MonitorApi;
-import cn.meiracle.monitor.export.model.ChangeRecordDTO;
+import cn.meiracle.monitor.export.domain.model.ChangeRecordDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboService;
 
 import java.util.List;
 
 /**
- * 监控远程服务实现层（provider/remote）：实现 {@link MonitorApi} 并作为 Dubbo 服务发布。
+ * 监控远程服务实现层（provider/remote）：实现
+ * {@link cn.meiracle.monitor.export.service.MonitorRemoteService} 并作为 Dubbo 服务发布。
  */
 @DubboService
 @RequiredArgsConstructor
-public class MonitorRemoteService implements MonitorApi {
+public class MonitorRemoteService implements cn.meiracle.monitor.export.service.MonitorRemoteService {
 
     private final ChangeRecordBiz changeRecordBiz;
 

@@ -1,20 +1,20 @@
 package cn.meiracle.demo.provider.remote;
 
 import cn.meiracle.demo.biz.DemoThingBiz;
-import cn.meiracle.demo.export.api.DemoThingApi;
-import cn.meiracle.demo.export.model.DemoThingDTO;
+import cn.meiracle.demo.export.domain.model.DemoThingDTO;
 import lombok.RequiredArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboService;
 
 import java.util.List;
 
 /**
- * 远程服务实现层（provider/remote）：实现 export 契约 {@link DemoThingApi}，
+ * 远程服务实现层（provider/remote）：实现 export 契约
+ * {@link cn.meiracle.demo.export.service.DemoThingRemoteService}，
  * 并作为 Dubbo 服务发布。消费方依赖 export 契约即可远程调用。
  */
 @DubboService
 @RequiredArgsConstructor
-public class DemoThingRemoteService implements DemoThingApi {
+public class DemoThingRemoteService implements cn.meiracle.demo.export.service.DemoThingRemoteService {
 
     private final DemoThingBiz demoThingBiz;
 

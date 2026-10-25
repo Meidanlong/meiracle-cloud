@@ -1,7 +1,7 @@
 package cn.meiracle.monitor.biz;
 
 import cn.meiracle.monitor.domain.ChangeRecord;
-import cn.meiracle.monitor.export.model.ChangeRecordDTO;
+import cn.meiracle.monitor.export.domain.model.ChangeRecordDTO;
 import cn.meiracle.monitor.service.ChangeRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
