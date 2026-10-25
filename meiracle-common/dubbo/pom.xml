@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cn.meiracle</groupId>
+        <artifactId>meiracle-common</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>dubbo</artifactId>
+    <name>meiracle-common-dubbo</name>
+    <description>Dubbo RPC 能力层（基于 RuoYi-Cloud-Plus 改造，包名改为 cn.meiracle.dubbo）</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.meiracle</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.meiracle</groupId>
+            <artifactId>redis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+                <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-spring-boot-starter</artifactId>
+            <version>${dubbo.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-registry-nacos</artifactId>
+            <version>${dubbo.version}</version>
+        </dependency>
+    </dependencies>
+</project>

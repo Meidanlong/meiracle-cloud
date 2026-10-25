@@ -1,0 +1,31 @@
+# ============================================================================
+# Nacos 配置导入清单（manifest）
+# ----------------------------------------------------------------------------
+# 本目录下实际配置位于 ./configs/，由 import.sh 批量发布到 Nacos。
+# 下表为对应关系，供在 Nacos 控制台核对。
+#
+# | dataId                | group         | 文件                              | 用途                       |
+# |-----------------------|---------------|-----------------------------------|----------------------------|
+# | meiracle-common.yaml  | DEFAULT_GROUP | configs/meiracle-common.yaml      | redis/dubbo/mybatis 共享    |
+# | meiracle-demo.yaml    | DEFAULT_GROUP | configs/meiracle-demo.yaml        | demo 数据源 / 注册 / 地址  |
+# | meiracle-monitor.yaml | DEFAULT_GROUP | configs/meiracle-monitor.yaml     | monitor 数据源 / 采集地址  |
+#
+# 导入命令：
+#   NACOS_ADDR=127.0.0.1:8848 NACOS_USERNAME=nacos NACOS_PASSWORD=<真实密码> \
+#     bash nacos/import.sh
+#
+# 所有内容均为占位值，部署前请替换为真实中间件地址与凭据。
+# ============================================================================
+configs:
+  - dataId: meiracle-common.yaml
+    group: DEFAULT_GROUP
+    file: configs/meiracle-common.yaml
+    desc: redis / dubbo / mybatis-plus 共享能力配置
+  - dataId: meiracle-demo.yaml
+    group: DEFAULT_GROUP
+    file: configs/meiracle-demo.yaml
+    desc: meiracle-demo 数据源、Nacos 注册、monitor 上报地址
+  - dataId: meiracle-monitor.yaml
+    group: DEFAULT_GROUP
+    file: configs/meiracle-monitor.yaml
+    desc: meiracle-monitor 数据源、采集 demo 的地址

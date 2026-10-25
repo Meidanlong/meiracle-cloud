@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cn.meiracle</groupId>
+        <artifactId>meiracle-common</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>nacos</artifactId>
+    <name>meiracle-common-nacos</name>
+    <description>Nacos 配置/注册中心能力层（基于 RuoYi-Cloud-Plus 改造，包名改为 cn.meiracle.nacos）</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.meiracle</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+    </dependencies>
+</project>

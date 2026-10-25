@@ -1,0 +1,45 @@
+# ============================================================================
+# 监控配置：meiracle-monitor
+# dataId: meiracle-monitor.yaml   group: DEFAULT_GROUP
+# 占位值，部署前替换。
+# ============================================================================
+
+server:
+  port: 9211
+  servlet:
+    context-path: /monitor
+
+spring:
+  application:
+    name: meiracle-monitor
+  datasource:
+    dynamic:
+      primary: master
+      strict: false
+      datasource:
+        master:
+          url: jdbc:mysql://${DB_HOST:127.0.0.1}:3306/meiracle_monitor?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+          username: ${DB_USER:meiracle}
+          password: ${DB_PASSWORD:CHANGE_ME_db_pwd}
+          driver-class-name: com.mysql.cj.jdbc.Driver
+
+nacos:
+  addr: ${NACOS_ADDR:127.0.0.1:8848}
+  username: ${NACOS_USERNAME:nacos}
+  password: ${NACOS_PASSWORD:CHANGE_ME_nacos_pwd}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+
+# monitor -> demo 健康/数据采集地址
+demo:
+  base-url: http://${DEMO_HOST:127.0.0.1}:9201
+
+dubbo:
+  protocol:
+    port: 20881
+  scan:
+    base-packages: cn.meiracle.monitor.provider.remote

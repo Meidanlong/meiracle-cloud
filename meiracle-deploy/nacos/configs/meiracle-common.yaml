@@ -1,0 +1,29 @@
+# ============================================================================
+# 共享配置：meiracle-common 能力（redis / dubbo / nacos / mybatis-plus）
+# dataId: meiracle-common.yaml   group: DEFAULT_GROUP
+# 以下均为占位值，部署前请替换为真实中间件地址与凭据。
+# ============================================================================
+
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:CHANGE_ME_redis_pwd}
+      database: 0
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+  protocol:
+    name: dubbo
+    port: ${DUBBO_PORT:20880}
+  registry:
+    address: nacos://${NACOS_ADDR:127.0.0.1:8848}
+  consumer:
+    check: false
+
+mybatis-plus:
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  sql-log:
+    enabled: false

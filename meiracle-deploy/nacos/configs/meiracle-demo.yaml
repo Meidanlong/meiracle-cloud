@@ -1,0 +1,39 @@
+# ============================================================================
+# 业务样板配置：meiracle-demo
+# dataId: meiracle-demo.yaml   group: DEFAULT_GROUP
+# 占位值，部署前替换。
+# ============================================================================
+
+server:
+  port: 9201
+  servlet:
+    context-path: /demo
+
+spring:
+  application:
+    name: meiracle-demo
+  datasource:
+    dynamic:
+      primary: master
+      strict: false
+      datasource:
+        master:
+          url: jdbc:mysql://${DB_HOST:127.0.0.1}:3306/meiracle?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+          username: ${DB_USER:meiracle}
+          password: ${DB_PASSWORD:CHANGE_ME_db_pwd}
+          driver-class-name: com.mysql.cj.jdbc.Driver
+
+nacos:
+  addr: ${NACOS_ADDR:127.0.0.1:8848}
+  username: ${NACOS_USERNAME:nacos}
+  password: ${NACOS_PASSWORD:CHANGE_ME_nacos_pwd}
+
+# demo -> monitor 变动上报地址
+monitor:
+  base-url: http://${MONITOR_HOST:127.0.0.1}:9211
+
+dubbo:
+  protocol:
+    port: 20880
+  scan:
+    base-packages: cn.meiracle.demo.provider.remote

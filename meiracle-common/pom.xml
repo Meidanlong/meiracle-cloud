@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.5</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>cn.meiracle</groupId>
+    <artifactId>meiracle-common</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>meiracle-common</name>
+    <description>Meiracle 公共能力层：core / redis / mysql / dubbo / nacos / json（派生自 RuoYi-Cloud-Plus，包名 org.dromara -> cn.meiracle）</description>
+
+    <modules>
+        <module>core</module>
+        <module>redis</module>
+        <module>mysql</module>
+        <module>dubbo</module>
+        <module>nacos</module>
+    </modules>
+
+    <properties>
+        <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <mybatis-plus.version>3.5.7</mybatis-plus.version>
+        <mybatis-plus-join.version>1.5.4</mybatis-plus-join.version>
+        <dubbo.version>3.2.12</dubbo.version>
+        <redisson.version>3.27.2</redisson.version>
+        <dynamic-ds.version>4.3.0</dynamic-ds.version>
+        <hutool.version>5.8.32</hutool.version>
+        <mapstruct-plus.version>2.1.1</mapstruct-plus.version>
+        <ip2region.version>2.7.0</ip2region.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-bom</artifactId>
+                <version>${mybatis-plus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

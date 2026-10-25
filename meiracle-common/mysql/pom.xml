@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>cn.meiracle</groupId>
+        <artifactId>meiracle-common</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>mysql</artifactId>
+    <name>meiracle-common-mysql</name>
+    <description>MySQL/MyBatis-Plus 能力层（基于 RuoYi-Cloud-Plus 改造，包名改为 cn.meiracle.mybatis；已移除数据权限/多业务依赖）</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.meiracle</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>${dynamic-ds.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.yulichang</groupId>
+            <artifactId>mybatis-plus-join-boot-starter</artifactId>
+            <version>${mybatis-plus-join.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+</project>

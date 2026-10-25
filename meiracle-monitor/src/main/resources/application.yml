@@ -1,0 +1,67 @@
+server:
+  port: 9211
+  servlet:
+    context-path: /monitor
+
+spring:
+  application:
+    name: meiracle-monitor
+  datasource:
+    dynamic:
+      primary: master
+      strict: false
+      datasource:
+        master:
+          url: jdbc:mysql://${DB_HOST:127.0.0.1}:3306/meiracle_monitor?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+          username: ${DB_USER:meiracle}
+          password: ${DB_PASSWORD:CHANGE_ME_db_pwd}
+          driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:CHANGE_ME_redis_pwd}
+      database: 0
+      timeout: 3000ms
+
+mybatis-plus:
+  mapperPackage: cn.meiracle.monitor.dao.mapper
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  typeAliasesPackage: cn.meiracle.monitor.domain
+  sql-log:
+    enabled: false
+
+nacos:
+  addr: ${NACOS_ADDR:127.0.0.1:8848}
+  username: ${NACOS_USERNAME:nacos}
+  password: ${NACOS_PASSWORD:CHANGE_ME_nacos_pwd}
+
+dubbo:
+  application:
+    name: meiracle-monitor
+  protocol:
+    name: dubbo
+    port: 20881
+  registry:
+    address: nacos://${NACOS_ADDR:127.0.0.1:8848}
+  scan:
+    base-packages: cn.meiracle.monitor.provider.remote
+  consumer:
+    check: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+# ===== demo 服务地址（monitor -> demo 健康/数据采集；占位，部署时替换） =====
+demo:
+  base-url: http://${DEMO_HOST:127.0.0.1}:9201
+
+logging:
+  level:
+    cn.meiracle: info
