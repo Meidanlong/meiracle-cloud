@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <!--
+      构建专用 settings：仅用于本地 docker maven 容器构建。
+      指向阿里云公共仓库（环境内 repo.maven.apache.org 证书已过期的兜底）。
+      不修改用户全局 ~/.m2/settings.xml。
+    -->
+    <mirrors>
+        <mirror>
+            <id>aliyun</id>
+            <mirrorOf>*</mirrorOf>
+            <name>Aliyun Maven Public</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </mirror>
+    </mirrors>
+</settings>

@@ -14,7 +14,7 @@
 
 ## 1. 项目定位与多仓库结构
 
-`meiracle-cloud` 是一个**根模板仓库**，内含 4 个相互独立的 Maven 工程（各自拥有独立根 `pom.xml`，不聚合为单一 reactor）。新建业务系统时，建议将 4 个目录分别克隆为独立仓库，或整体克隆后按需拆分。
+`meiracle-cloud` 是一个**根模板仓库**，内含多个相互独立的 Maven 工程（各自拥有独立根 `pom.xml`，不聚合为单一 reactor）。新建业务系统时，建议将各目录分别克隆为独立仓库，或整体克隆后按需拆分。
 
 ```
 meiracle-cloud/
@@ -26,6 +26,8 @@ meiracle-cloud/
 │   └── nacos/            # Nacos 占位配置（NacosProperties，无业务逻辑）
 ├── meiracle-demo/        # 业务样板：演示一套完整业务链路（v3.1 分层）
 ├── meiracle-monitor/     # 监控/变动追踪样板：真实对接 demo（非空壳）
+├── meiracle-file/        # 文件存储能力：本地/MinIO，Dubbo 契约暴露
+├── meiracle-agent/       # Agent 知识库/RAG 对话能力（snail-ai-starter 封装）
 ├── meiracle-deploy/      # 中间件编排 + 库表初始化 + Nacos 配置 + 部署脚本
 └── README.md
 ```
@@ -35,6 +37,8 @@ meiracle-cloud/
 | meiracle-common | `cn.meiracle.{core,redis,mysql,dubbo,nacos}` | 被 demo / monitor 依赖的通用能力 |
 | meiracle-demo | `cn.meiracle.demo` | 业务开发起点样板 |
 | meiracle-monitor | `cn.meiracle.monitor` | 监控/变动追踪起点样板 |
+| meiracle-file | `cn.meiracle.file` | 文件存储能力（本地/MinIO，Dubbo 契约） |
+| meiracle-agent | `cn.meiracle.agent` | Agent 知识库/RAG 对话能力（见 §6） |
 | meiracle-deploy | — | 仅部署产物，不含 Java 业务代码 |
 
 > **依赖方式**：`meiracle-demo` / `meiracle-monitor` 通过 `cn.meiracle:meiracle-*:1.0.0` 依赖 common 的 5 个能力模块。本地开发需先 `cd meiracle-common && mvn -DskipTests install`；团队共享可推送至 Nexus 私服（见 `meiracle-deploy/docker-compose.yml` 中的 nexus 服务）。
@@ -87,7 +91,7 @@ client            # 出站 HTTP 调用（demo -> monitor 变动上报）
 ```bash
 cd meiracle-deploy
 cp .env.example .env        # 编辑其中所有 CHANGE_ME_* 为真实值
-bash scripts/start-all.sh   # 启动 mysql/redis/nacos/minio/nexus/seata
+bash scripts/start-all.sh   # 启动 mysql/redis/nacos/minio/nexus/seata/elasticsearch
 bash nacos/import.sh        # 可选：导入 Nacos 配置
 bash scripts/deploy-demo.sh # 构建并启动 demo / monitor
 ```
@@ -127,7 +131,35 @@ bash scripts/deploy-demo.sh # 构建并启动 demo / monitor
 
 ---
 
-## 6. 连接信息均为占位符（必读）
+## 6. meiracle-agent（Agent 知识库 / RAG 对话能力）
+
+`meiracle-agent` 是基于外部 SDK `com.aizuda:snail-ai-starter` 封装的**开箱即用 AI 能力模块**，提供智能体（Agent）、知识库（RAG 检索增强）、文档解析与对话等通用能力。模块本身业务代码极薄：核心能力由 starter 自动装配，工程内保留 v3.1 分层骨架供后续扩展自定义端点/逻辑。
+
+### 6.1 技术要点
+
+| 项 | 值 |
+|----|----|
+| 端口 / 上下文 | `9404` / `/agent`（HTTP 管理与对话 API），内部 gRPC `18888` |
+| 技术栈 | Spring Boot 3.5 / Java 21，`snail-ai-starter` 自动装配（含管理后台） |
+| 外部 SDK | `com.aizuda:snail-ai-starter`（SnailAI 官方 starter，非本仓库代码） |
+| 依赖 common | `cn.meiracle:nacos:1.0.0`（可选，仅 Nacos 接入占位） |
+
+### 6.2 依赖中间件
+
+- **MySQL / PostgreSQL**：存储知识库、会话、文档等（表由 starter 启动时**自动创建**，无需手工执行，见 `meiracle-agent/init/sql/schema.sql` 说明）。
+- **Elasticsearch**：RAG 向量库后端之一；`meiracle-deploy/docker-compose.yml` 已内置 ES 服务（占位配置）。向量库也可在管理后台改选 PG_VECTOR / MILVUS，届时可不必启动 ES。
+- **MinIO（可选）**：文档/图片对象存储（`snail-ai.resource.*` 占位配置）。
+- **文档解析（可选）**：Docling / PaddleOCR 服务（`rag.docling.*` 占位配置）。
+
+### 6.3 配置与落地
+
+- `application.yml` 中所有连接与密钥均为 `${VAR:CHANGE_ME_*}` 占位符；**向量库、模型等实例的连接信息在管理后台“运行时录入”**，不写入 yml。
+- 启动后访问 `http://127.0.0.1:9404/agent` 进入管理后台，配置模型、向量库与知识库即可使用。
+- **复制落地**：整目录复制 `meiracle-agent`，按需修改包名/端口；先 `mvn install` meiracle-common（或从私服拉取），再构建本模块。
+
+---
+
+## 7. 连接信息均为占位符（必读）
 
 ⚠️ **本仓库所有数据库连接、Redis、Nacos、MinIO、Seata、Nexus 的地址 / 账号 / 密码均为占位符**，统一采用以下形式：
 
@@ -146,14 +178,14 @@ bash scripts/deploy-demo.sh # 构建并启动 demo / monitor
 
 ---
 
-## 7. 许可证
+## 8. 许可证
 
 本项目沿用 RuoYi-Cloud-Plus 的 **MIT / Apache-2.0** 双协议。详见 [LICENSE](./LICENSE)。
 使用、修改、分发时请保留原始版权与许可声明。
 
 ---
 
-## 8. 快速开始（本地）
+## 9. 快速开始（本地）
 
 ```bash
 # 1) 构建通用能力库

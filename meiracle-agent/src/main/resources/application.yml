@@ -1,0 +1,98 @@
+server:
+  port: 9404
+  servlet:
+    context-path: /agent
+
+spring:
+  application:
+    name: meiracle-agent
+  servlet:
+    multipart:
+      enabled: true
+      # 单个文件的最大限制（RAG 文档上传建议 50MB - 100MB）
+      max-file-size: 50MB
+      # 单次请求的总文件大小限制
+      max-request-size: 100MB
+  web:
+    resources:
+      static-locations: classpath:admin/
+  # ===== 知识库/对话元数据存储（snail-ai storage starter 需要数据源；占位符化，切勿硬编码真实密码） =====
+  # 说明：向量库（Elasticsearch / PostgreSQL / Milvus）本身不在本文件配置，
+  #       而是在 meiracle-agent 管理后台「向量库实例」中运行时录入（host/port/db/user/pwd）。
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:127.0.0.1}:3306/${DB_DATABASE:meiracle_agent}?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: ${DB_USER:meiracle}
+    password: ${DB_PASSWORD:CHANGE_ME_db_pwd}
+
+# ===== SnailAI（aizuda）核心配置 =====
+snail-ai:
+  server:
+    # gRPC 端口（Agent 内部推理/工具调用通道）
+    grpc-port: 18888
+  skill:
+    upload-dir: ./upload/skills
+  crypto:
+    # 配置加解密密钥（占位符化，生产请通过环境变量注入强密钥）
+    secret-key: ${SNAIL_AI_CRYPTO_KEY:CHANGE_ME_snailai_crypto_key}
+    iv: ${SNAIL_AI_CRYPTO_IV:CHANGE_ME_snailai_crypto_iv}
+  resource:
+    # 资源存储类型：LOCAL（默认，可运行） / MINIO
+    storage-type: ${AGENT_STORAGE_TYPE:LOCAL}
+    upload-dir: ./upload/resource
+    minio:
+      endpoint: ${MINIO_ENDPOINT:http://127.0.0.1:9000}
+      access-key: ${MINIO_ACCESS_KEY:CHANGE_ME_minio_access}
+      secret-key: ${MINIO_SECRET_KEY:CHANGE_ME_minio_secret}
+      bucket: ${MINIO_BUCKET:meiracle-agent}
+  # RAG 文档解析与图片 OCR 配置（docling / PaddleOCR 为可选外部服务）
+  rag:
+    docling:
+      enabled: ${AGENT_DOCLING_ENABLED:true}
+      url: ${AGENT_DOCLING_URL:http://127.0.0.1:5100}
+      timeout-seconds: ${AGENT_DOCLING_TIMEOUT:300}
+      concurrency: ${AGENT_DOCLING_CONCURRENCY:3}
+      health-timeout-millis: 3000
+      poll-interval-millis: 3000
+      status-timeout-millis: 10000
+      result-timeout-millis: 30000
+      max-image-count: 100
+      max-image-bytes: 10485760
+      paddle-ocr-enabled: ${AGENT_PADDLE_OCR_ENABLED:true}
+      paddle-ocr-url: ${AGENT_PADDLE_OCR_URL:http://127.0.0.1:8866/ocr}
+      paddle-ocr-timeout-millis: 180000
+      paddle-ocr-batch-size: 5
+      vision-ocr-fallback-enabled: false
+  # 短期记忆存储：memory（单机） / db（持久化）
+  memory:
+    short-term:
+      store-type: ${AGENT_MEMORY_STORE:db}
+
+mybatis-plus:
+  typeAliasesPackage: com.aizuda.snail.ai.persistence
+  global-config:
+    db-config:
+      capital-mode: false
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+
+# ===== Nacos（注册/配置中心，占位账号；本模块仅依赖 nacos-client，
+#            spring-cloud 发现需额外引入 spring-cloud-alibaba nacos 才会实际注册） =====
+nacos:
+  addr: ${NACOS_ADDR:127.0.0.1:8848}
+  username: ${NACOS_USERNAME:nacos}
+  password: ${NACOS_PASSWORD:CHANGE_ME_nacos_pwd}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: ALWAYS
+    logfile:
+      external-file: ./logs/${spring.application.name}/console.log

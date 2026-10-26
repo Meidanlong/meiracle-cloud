@@ -8,7 +8,7 @@
 
 ```
 meiracle-deploy/
-├── docker-compose.yml      # mysql / redis / nacos / minio / nexus / seata 编排
+├── docker-compose.yml      # mysql / redis / nacos / minio / nexus / seata / elasticsearch 编排
 ├── .env.example            # 环境变量样例（复制为 .env 后修改）
 ├── init/
 │   └── init.sql            # 建库建表（meiracle / meiracle_monitor）
@@ -27,10 +27,12 @@ meiracle-deploy/
 ```bash
 cd meiracle-deploy
 cp .env.example .env          # 然后编辑 .env 中所有 CHANGE_ME_* 为真实强密码
-bash scripts/start-all.sh     # 启动 mysql/redis/nacos/minio/nexus/seata
+bash scripts/start-all.sh     # 启动 mysql/redis/nacos/minio/nexus/seata/elasticsearch
 ```
 
 容器启动后 MySQL 会自动执行 `init/init.sql` 完成建库建表。
+
+> **Elasticsearch（RAG 向量库）说明**：`elasticsearch` 服务默认编排在内，但**仅在** `meiracle-agent` 选用 `ELASTICSEARCH` 作为向量库后端时才真正需要。SnailAI 的向量库连接信息（host/port/账号）是在管理后台“运行时录入”的（见模板 `meiracle-agent` 的 `application.yml` 说明），因此本编排默认关闭 `xpack.security`、不内置账号，纯占位供本地/模板落地。如改用 PG_VECTOR（复用 MySQL）或 MILVUS，可不启动该服务。
 
 ## 2. 导入 Nacos 配置（可选）
 
@@ -64,6 +66,7 @@ bash scripts/deploy-demo.sh
 | MinIO 凭据   | `CHANGE_ME_minio_*`            | 对象存储 access/secret       |
 | Nexus 密码   | `CHANGE_ME_nexus_admin`        | Maven 私服管理员密码         |
 | Seata token  | `CHANGE_ME_seata_token`        | 分布式事务控制台 token       |
+| ES(可选)     | `CHANGE_ME_es_password`        | 仅在 `ES_SECURITY_ENABLED=true` 时填写；向量库后端非 ELASTICSEARCH 时无需启动 |
 
 ## 5. 停止
 
