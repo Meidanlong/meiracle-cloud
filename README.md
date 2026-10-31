@@ -28,6 +28,7 @@ meiracle-cloud/
 ├── meiracle-monitor/     # 监控/变动追踪样板：真实对接 demo（非空壳）
 ├── meiracle-file/        # 文件存储能力：本地/MinIO，Dubbo 契约暴露
 ├── meiracle-agent/       # Agent 知识库/RAG 对话能力（snail-ai-starter 封装）
+├── meiracle-gateway/     # 通用网关：路由转发 + Sa-Token 登录鉴权 + 白名单 + 全局日志
 ├── meiracle-deploy/      # 中间件编排 + 库表初始化 + Nacos 配置 + 部署脚本
 └── README.md
 ```
@@ -39,6 +40,7 @@ meiracle-cloud/
 | meiracle-monitor | `cn.meiracle.monitor` | 监控/变动追踪起点样板 |
 | meiracle-file | `cn.meiracle.file` | 文件存储能力（本地/MinIO，Dubbo 契约） |
 | meiracle-agent | `cn.meiracle.agent` | Agent 知识库/RAG 对话能力（见 §6） |
+| meiracle-gateway | `cn.meiracle.gateway` | 通用网关（Spring Cloud Gateway MVC，路由转发 + Sa-Token 鉴权，端口 `9400`） |
 | meiracle-deploy | — | 仅部署产物，不含 Java 业务代码 |
 
 > **依赖方式**：`meiracle-demo` / `meiracle-monitor` 通过 `cn.meiracle:meiracle-*:1.0.0` 依赖 common 的 5 个能力模块。本地开发需先 `cd meiracle-common && mvn -DskipTests install`；团队共享可推送至 Nexus 私服（见 `meiracle-deploy/docker-compose.yml` 中的 nexus 服务）。

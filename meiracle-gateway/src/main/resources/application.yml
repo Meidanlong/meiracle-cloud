@@ -1,0 +1,110 @@
+server:
+  port: 9400
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: meiracle-gateway
+
+--- # 安全白名单（网关不做登录校验的路径，按需增删）
+security:
+  ignore:
+    whites:
+      - /auth/login
+      - /auth/logout
+      - /auth/register
+      - /*/v3/api-docs
+      - /*/error
+      - /csrf
+
+--- # 网关路由（示例：指向模板内通用服务；StripPrefix=1 去掉第一段前缀后转发）
+spring:
+  cloud:
+    gateway:
+      # 请求日志开关（GlobalLogFilter）
+      request-log: true
+      server:
+        webmvc:
+          routes:
+            # 业务样板（meiracle-demo，9201，context-path /demo）
+            - id: meiracle-demo
+              uri: http://${DEMO_HOST:127.0.0.1}:9201
+              predicates:
+                - Path=/demo/**
+            # 监控样板（meiracle-monitor，9211，context-path /monitor）
+            - id: meiracle-monitor
+              uri: http://${MONITOR_HOST:127.0.0.1}:9211
+              predicates:
+                - Path=/monitor/**
+            # 文件存储能力（meiracle-file，9409，context-path /file）
+            - id: meiracle-file
+              uri: http://${FILE_HOST:127.0.0.1}:9409
+              predicates:
+                - Path=/file/**
+            # Agent 知识库/RAG（meiracle-agent，9404，context-path /agent）
+            - id: meiracle-agent
+              uri: http://${AGENT_HOST:127.0.0.1}:9404
+              predicates:
+                - Path=/agent/**
+          # 如下游服务已接入 Nacos 注册发现，可改为负载均衡路由，例如：
+          # - id: meiracle-demo
+          #   uri: lb://meiracle-demo
+          #   predicates:
+          #     - Path=/demo/**
+          #   （此时需引入 spring-cloud-starter-alibaba-nacos-discovery，
+          #     并配置 spring.cloud.nacos.discovery.server-addr）
+
+--- # 网关 HttpClient5 连接池（转发底层连接池调优）
+spring.cloud.gateway.httpclient:
+  max-conn-total: 1000
+  max-conn-per-route: 500
+  connection-request-timeout: 3s
+  validate-after-inactivity: 30s
+  # response-timeout: 60s   # SSE 场景通常不设置
+
+--- # Sa-Token 鉴权
+sa-token:
+  token-name: Authorization
+  timeout: 2592000
+  active-timeout: -1
+  is-concurrent: true
+  is-share: true
+  token-style: uuid
+  is-log: false
+  # 网关开启内部 same-token 校验，并向下游透传（ForwardAuthFilter）
+  check-same-token: false
+
+--- # API 解密（默认关闭；开启后 GlobalLogFilter 对加密请求不打印明文）
+api-decrypt:
+  enabled: false
+  header-flag: encrypt-key
+
+--- # actuator Basic Auth 账号（AuthFilter 读取，占位，部署时替换）
+spring.cloud.nacos.discovery.metadata:
+  username: ${ACTUATOR_USERNAME:meiracle}
+  userpassword: ${ACTUATOR_PASSWORD:CHANGE_ME_actuator_pwd}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+# ===== Nacos（占位说明） =====
+# 本模板各服务默认独立部署、路由采用 http 直连，无需 Nacos 注册发现；
+# 如需接入 Nacos（配置中心/注册发现），引入 spring-cloud-starter-alibaba-nacos-discovery
+# （及 spring-cloud-starter-alibaba-nacos-config），并配置：
+# nacos:
+#   addr: ${NACOS_ADDR:127.0.0.1:8848}
+#   username: ${NACOS_USERNAME:nacos}
+#   password: ${NACOS_PASSWORD:CHANGE_ME_nacos_pwd}
+
+# ===== 可选：跨进程共享登录态 =====
+# 网关默认使用 Sa-Token 内存会话（单实例可用）。多实例部署时需共享登录态：
+# 引入 meiracle-common/redis（Redisson），并实现 SaTokenDao 注入（redis 封装已含），
+# 同时在下方追加 spring.data.redis 连接配置（${REDIS_HOST:127.0.0.1} 等）。
+
+logging:
+  level:
+    cn.meiracle: info

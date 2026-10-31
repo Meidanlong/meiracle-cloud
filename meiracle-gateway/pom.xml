@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.16</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>cn.meiracle</groupId>
+    <artifactId>meiracle-gateway</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+    <name>meiracle-gateway</name>
+    <description>通用网关能力模块（Spring Cloud Gateway MVC：路由转发 + Sa-Token 登录鉴权 + 白名单 + 全局日志）</description>
+
+    <properties>
+        <java.version>21</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Sa-Token 版本，与 meiracle-common 保持一致（1.39.0） -->
+        <sa-token.version>1.39.0</sa-token.version>
+        <!-- Spring Cloud 版本，需与 Boot 3.5.x 对齐 -->
+        <spring-cloud.version>2025.1.2</spring-cloud.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+
+        <!-- meiracle 公共能力层（core 含 core.* 与 json.* 工具；nacos 含 Nacos 占位配置） -->
+        <dependency>
+            <groupId>cn.meiracle</groupId>
+            <artifactId>core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.meiracle</groupId>
+            <artifactId>nacos</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!-- Spring MVC Web 容器（Gateway MVC 基于 Servlet） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- SpringBoot Actuator（健康检查 / 监控端点，受 Basic Auth 保护） -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Spring Cloud Gateway（MVC 版，基于 RestClient 转发） -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway-server-webmvc</artifactId>
+        </dependency>
+
+        <!-- 客户端负载均衡（如需 lb:// 路由时启用） -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+
+        <!-- HttpClient5（Gateway MVC RestClient 底层连接池调优） -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
+
+        <!-- 本地路由缓存 -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+        </dependency>
+
+        <!--
+            Sa-Token 鉴权（Boot 3 / jakarta 版 starter，自带 jakarta servlet 适配）：
+            1) 网关用 SaServletFilter 做统一登录校验（见 filter/AuthFilter）；
+            2) 跨进程共享登录态需引入 meiracle-common/redis 并配置 SaTokenDao，见 application.yml 末尾说明。
+        -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot3-starter</artifactId>
+            <version>${sa-token.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>cn.meiracle.gateway.MeiracleGatewayApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
