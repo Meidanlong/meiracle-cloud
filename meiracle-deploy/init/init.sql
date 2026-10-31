@@ -28,6 +28,27 @@ CREATE TABLE IF NOT EXISTS `demo_thing` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='示例事物表（模板演示）';
 
+-- 简单用户示例表：演示 HTTP / Dubbo provider / Dubbo consumer 三种链路
+CREATE TABLE IF NOT EXISTS `demo_user` (
+  `id`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name`        VARCHAR(128) DEFAULT NULL COMMENT '用户名',
+  `email`       VARCHAR(255) DEFAULT NULL COMMENT '邮箱',
+  `create_dept` BIGINT       DEFAULT NULL COMMENT '创建部门',
+  `create_by`   BIGINT       DEFAULT NULL COMMENT '创建者',
+  `create_time` DATETIME     DEFAULT NULL COMMENT '创建时间',
+  `update_by`   BIGINT       DEFAULT NULL COMMENT '更新者',
+  `update_time` DATETIME     DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='简单用户示例表（模板演示）';
+
+-- 种子数据：便于启动后直接验证 GET /demo/user/1 与 GET /demo/user/dubbo/1 两条链路
+INSERT INTO `demo_user` (`name`, `email`, `create_time`)
+SELECT 'demo_alice', 'alice@example.com', NOW()
+WHERE NOT EXISTS (SELECT 1 FROM `demo_user` WHERE `name` = 'demo_alice');
+INSERT INTO `demo_user` (`name`, `email`, `create_time`)
+SELECT 'demo_bob', 'bob@example.com', NOW()
+WHERE NOT EXISTS (SELECT 1 FROM `demo_user` WHERE `name` = 'demo_bob');
+
 -- ===================== meiracle-monitor =====================
 USE `meiracle_monitor`;
 

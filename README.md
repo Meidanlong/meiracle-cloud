@@ -25,7 +25,7 @@ meiracle-cloud/
 │   ├── dubbo/            # Dubbo 接入封装
 │   ├── nacos/            # Nacos 占位配置（NacosProperties，无业务逻辑）
 │   └── http/             # 通用 HTTP 调用（HttpTemplate：GET/POST JSON/超时/请求头）
-├── meiracle-demo/        # 业务样板：演示一套完整业务链路（v3.1 分层）
+├── meiracle-demo/        # 业务样板：三种调用链路示例（HTTP / Dubbo provider / Dubbo consumer，v3.1 分层）
 ├── meiracle-monitor/     # 监控/变动追踪样板：真实对接 demo（非空壳）
 ├── meiracle-file/        # 文件存储能力：本地/MinIO，Dubbo 契约暴露
 ├── meiracle-agent/       # Agent 知识库/RAG 对话能力（snail-ai-starter 封装）
@@ -76,6 +76,13 @@ client            # 出站 HTTP 调用（demo -> monitor 变动上报）
 ---
 
 ## 3. 从 demo 复制出新业务（教程）
+
+> **三种调用链路示例（以简单用户 `DemoUser` 为例）**：
+> 1. **HTTP**：`provider/controller/DemoUserController` → `service` → `dao`（`GET /demo/user/{id}`，本地直查）；
+> 2. **Dubbo provider**：`export/service/DemoUserProvider` 契约 + `provider/remote/DemoUserProviderImpl`（`@DubboService` 发布）；
+> 3. **Dubbo consumer**：`consumer/DemoUserConsumer`（`@DubboReference` 注入，消费 demo 自身发布的 provider），经 `service` 的 `getByIdViaDubbo` 打通 `controller → service → consumer → provider → dao` 全链路（`GET /demo/user/dubbo/{id}`）。
+>
+> 其它服务消费 demo 的 RPC 时，只需依赖 demo 的 `export` 契约，再以同样的 `@DubboReference` 写法注入即可（Nacos 注册中心负责寻址）。
 
 1. **复制工程**：将 `meiracle-demo` 复制为 `meiracle-<你的业务>`（如 `meiracle-order`）。
 2. **改包名**：全局把 `cn.meiracle.demo` → `cn.meiracle.<业务>`；把 `application.yml` 的 `spring.application.name` 改为 `meiracle-<业务>`。

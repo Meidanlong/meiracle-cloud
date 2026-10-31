@@ -3,7 +3,7 @@ package cn.meiracle.demo.service.impl;
 import cn.meiracle.demo.dao.mapper.DemoThingMapper;
 import cn.meiracle.demo.domain.DemoThing;
 import cn.meiracle.demo.service.DemoThingService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

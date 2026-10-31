@@ -1,4 +1,4 @@
-package cn.meiracle.demo.controller;
+package cn.meiracle.demo.provider.controller;
 
 import cn.meiracle.demo.biz.DemoThingBiz;
 import cn.meiracle.demo.export.domain.model.DemoThingDTO;

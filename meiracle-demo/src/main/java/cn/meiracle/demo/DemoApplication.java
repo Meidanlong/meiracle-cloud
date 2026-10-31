@@ -7,7 +7,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Meiracle Demo 业务样板启动类。
- * 演示 domain/dao/service/biz/task/common/export/provider 分层与 Dubbo export 契约。
+ * <p>
+ * 演示三种调用链路（以「简单用户」为例）：
+ * 1) HTTP：provider/controller -> service -> dao；
+ * 2) Dubbo provider：export/service 契约 + provider/remote 以 {@code @DubboService} 发布；
+ * 3) Dubbo consumer：consumer 包中 {@code @DubboReference} 消费本模块自己发布的 provider。
+ * 另演示 domain/dao/service/biz/task/common 分层与 DemoThing 变动上报（见 client/MonitorClient）。
  *
  * @author meiracle
  */
