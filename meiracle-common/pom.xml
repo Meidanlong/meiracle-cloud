@@ -16,7 +16,7 @@
     <version>1.0.0</version>
     <packaging>pom</packaging>
     <name>meiracle-common</name>
-    <description>Meiracle 公共能力层：core / redis / mysql / dubbo / nacos / json（派生自 RuoYi-Cloud-Plus，包名 org.dromara -> cn.meiracle）</description>
+    <description>Meiracle 公共能力层：core / redis / mysql / dubbo / nacos / http（派生自 RuoYi-Cloud-Plus，包名 org.dromara -> cn.meiracle）</description>
 
     <modules>
         <module>core</module>
@@ -24,6 +24,7 @@
         <module>mysql</module>
         <module>dubbo</module>
         <module>nacos</module>
+        <module>http</module>
     </modules>
 
     <properties>

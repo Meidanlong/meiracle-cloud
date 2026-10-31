@@ -18,16 +18,18 @@
 
 ```
 meiracle-cloud/
-├── meiracle-common/      # 通用能力库（5 个模块，需 mvn install 到本地/私服）
+├── meiracle-common/      # 通用能力库（6 个模块，需 mvn install 到本地/私服）
 │   ├── core/             # 核心：常量、异常、工具、BaseEntity、json 封装
 │   ├── redis/            # Redisson 封装（读取 spring.data.redis.*）
 │   ├── mysql/            # MyBatis-Plus 封装（BaseMapperPlus / 自动填充）
 │   ├── dubbo/            # Dubbo 接入封装
-│   └── nacos/            # Nacos 占位配置（NacosProperties，无业务逻辑）
+│   ├── nacos/            # Nacos 占位配置（NacosProperties，无业务逻辑）
+│   └── http/             # 通用 HTTP 调用（HttpTemplate：GET/POST JSON/超时/请求头）
 ├── meiracle-demo/        # 业务样板：演示一套完整业务链路（v3.1 分层）
 ├── meiracle-monitor/     # 监控/变动追踪样板：真实对接 demo（非空壳）
 ├── meiracle-file/        # 文件存储能力：本地/MinIO，Dubbo 契约暴露
 ├── meiracle-agent/       # Agent 知识库/RAG 对话能力（snail-ai-starter 封装）
+├── meiracle-aigc/        # AI 媒体生成能力：文生图/生视频（策略化路由厂商，HTTP 调三方）+ 用量记录
 ├── meiracle-gateway/     # 通用网关：路由转发 + Sa-Token 登录鉴权 + 白名单 + 全局日志
 ├── meiracle-deploy/      # 中间件编排 + 库表初始化 + Nacos 配置 + 部署脚本
 └── README.md
@@ -40,10 +42,11 @@ meiracle-cloud/
 | meiracle-monitor | `cn.meiracle.monitor` | 监控/变动追踪起点样板 |
 | meiracle-file | `cn.meiracle.file` | 文件存储能力（本地/MinIO，Dubbo 契约） |
 | meiracle-agent | `cn.meiracle.agent` | Agent 知识库/RAG 对话能力（见 §6） |
+| meiracle-aigc | `cn.meiracle.aigc` | AI 媒体生成能力（文生图/图生图/文生视频/图生视频，策略化路由厂商；对外 HTTP，端口 `9402`/`/aigc`） |
 | meiracle-gateway | `cn.meiracle.gateway` | 通用网关（Spring Cloud Gateway MVC，路由转发 + Sa-Token 鉴权，端口 `9400`） |
 | meiracle-deploy | — | 仅部署产物，不含 Java 业务代码 |
 
-> **依赖方式**：`meiracle-demo` / `meiracle-monitor` 通过 `cn.meiracle:meiracle-*:1.0.0` 依赖 common 的 5 个能力模块。本地开发需先 `cd meiracle-common && mvn -DskipTests install`；团队共享可推送至 Nexus 私服（见 `meiracle-deploy/docker-compose.yml` 中的 nexus 服务）。
+> **依赖方式**：`meiracle-demo` / `meiracle-monitor` 通过 `cn.meiracle:meiracle-*:1.0.0` 依赖 common 的 6 个能力模块。本地开发需先 `cd meiracle-common && mvn -DskipTests install`；团队共享可推送至 Nexus 私服（见 `meiracle-deploy/docker-compose.yml` 中的 nexus 服务）。
 
 ---
 

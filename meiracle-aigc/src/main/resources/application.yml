@@ -1,0 +1,69 @@
+server:
+  port: 9402
+  servlet:
+    context-path: /aigc
+
+spring:
+  application:
+    name: meiracle-aigc
+  # ===== 数据源（占位，生产请用配置中心/环境变量注入，切勿硬编码真实密码） =====
+  datasource:
+    dynamic:
+      primary: master
+      strict: false
+      datasource:
+        master:
+          url: jdbc:mysql://${DB_HOST:127.0.0.1}:3306/meiracle_aigc?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+          username: ${DB_USER:meiracle}
+          password: ${DB_PASSWORD:CHANGE_ME_db_pwd}
+          driver-class-name: com.mysql.cj.jdbc.Driver
+  # ===== Redis（Redisson，读取 spring.data.redis.*） =====
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:CHANGE_ME_redis_pwd}
+      database: 0
+      timeout: 3000ms
+
+# ===== MyBatis-Plus =====
+mybatis-plus:
+  mapperPackage: cn.meiracle.aigc.dao.mapper
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+  typeAliasesPackage: cn.meiracle.aigc.domain
+  sql-log:
+    enabled: false
+
+# ===== meiracle-common http 能力配置（HttpTemplate 超时，毫秒） =====
+meiracle:
+  http:
+    connect-timeout: 10000
+    read-timeout: 60000
+
+# ===== 三方 AI 平台配置（占位，生产请用配置中心/环境变量注入） =====
+media:
+  kling:
+    # 可灵 API Key（控制台获取），国内 api-beijing.klingai.com / 国际 api-singapore.klingai.com
+    api-key: ${KLING_API_KEY:CHANGE_ME_kling_key}
+    base-url: ${KLING_BASE_URL:https://api-beijing.klingai.com}
+    default-image-model: kling-v2-1
+    default-video-model: kling-3.0-omni
+  ark:
+    # 火山引擎方舟 API Key
+    api-key: ${ARK_API_KEY:CHANGE_ME_ark_key}
+    base-url: ${ARK_BASE_URL:https://ark.cn-beijing.volces.com/api/v3}
+    default-image-model: doubao-seedream-5-0-flash-260915
+    default-video-model: doubao-seedance-2-5-260628
+
+# ===== Nacos（注册/配置中心，占位账号，生产请替换） =====
+nacos:
+  addr: ${NACOS_ADDR:127.0.0.1:8848}
+  username: ${NACOS_USERNAME:nacos}
+  password: ${NACOS_PASSWORD:CHANGE_ME_nacos_pwd}
+
+# 说明：本模块对外仅提供 HTTP 接口（/aigc/media/**），不走 Dubbo；
+# 如后续需要 Dubbo 契约，再引入 cn.meiracle:dubbo 并补充 export/provider。
+
+logging:
+  level:
+    cn.meiracle: info
